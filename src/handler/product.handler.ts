@@ -10,9 +10,9 @@ const index = async (req: Request, res: Response) => {
         const response = {
             status: 'success', statusCode: 200, response: result
         }
-        res.status(200).json(response);
+        return res.status(200).json(response);
     } catch (error) {
-        res.status(500).json({ error: error })
+        return res.status(500).json({ error: error })
     }
 };
 
@@ -27,9 +27,9 @@ const create = async (req: Request, res: Response) => {
         const response = {
             status: 'success', statusCode: 200, response: result
         }
-        res.status(200).json(response);
+        return res.status(200).json(response);
     } catch (error) {
-        res.status(500).json({ error: error })
+        return res.status(500).json({ error: error })
     }
 };
 
@@ -44,9 +44,9 @@ const update = async (req: Request, res: Response) => {
         const response = {
             status: 'success', statusCode: 200, response: result
         }
-        res.status(200).json(response);
+        return res.status(200).json(response);
     } catch (error) {
-        res.status(500).json({ error: error })
+        return res.status(500).json({ error: error })
     }
 };
 
@@ -56,9 +56,9 @@ const destroy = async (req: Request, res: Response) => {
         const response = {
             status: 'success', statusCode: 200, response: result
         }
-        res.status(200).json(response);
+        return res.status(200).json(response);
     } catch (error) {
-        res.status(500).json({ error: error })
+        return res.status(500).json({ error: error })
     }
 };
 

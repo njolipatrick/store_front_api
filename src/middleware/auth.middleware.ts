@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 const SECRET = String(process.env.TOKEN_SECRET);
 const verify = async (req: Request, res: Response, next: NextFunction) => {
-    const token = req.body.token || req.query.token || req.headers["x-access-token"];
+    const token = req.body.token || req.query.token || req.headers["Authorization"];
 
     if (!token) {
         return res.status(403).json({
@@ -15,7 +15,7 @@ const verify = async (req: Request, res: Response, next: NextFunction) => {
 
         next()
     } catch (error) {
-        res.status(401).json({ message: 'user unauthozied' })
+        return res.status(401).json({ message: 'user unauthozied' })
     }
 }
 

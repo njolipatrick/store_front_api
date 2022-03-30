@@ -7,9 +7,9 @@ const store = new OrderLog();
 const index = async (req: Request, res: Response) => {
     try {
         const result = await store.index();
-        res.status(200).json(result);
+        return res.status(200).json(result);
     } catch (error) {
-        res.status(500).json({ error: error })
+        return res.status(500).json({ error: error })
     }
 };
 
@@ -21,9 +21,9 @@ const create = async (req: Request, res: Response) => {
             category: req.body.category
         };
         const result = await store.create(order);
-        res.status(200).json(result);
+        return res.status(200).json(result);
     } catch (error) {
-        res.status(500).json({ error: error })
+        return res.status(500).json({ error: error })
     }
 };
 
@@ -35,18 +35,18 @@ const update = async (req: Request, res: Response) => {
             category: req.body.category
         };
         const result = await store.update(order, Number(req.params.id));
-        res.status(200).json(result);
+        return res.status(200).json(result);
     } catch (error) {
-        res.status(500).json({ error: error })
+        return res.status(500).json({ error: error })
     }
 };
 
 const destroy = async (req: Request, res: Response) => {
     try {
         const result = await store.destroy(Number(req.params.id));
-        res.status(200).json(result);
+        return res.status(200).json(result);
     } catch (error) {
-        res.status(500).json({ error: error })
+        return res.status(500).json({ error: error })
     }
 };
 

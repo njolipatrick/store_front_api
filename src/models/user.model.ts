@@ -32,7 +32,7 @@ export class UserStore {
             const sql = "INSERT INTO users (firstName, email, lastName, password) VALUES ($1, $2, $3, $4) RETURNING *;";
             const hashPassword = await bcrypt.hash(user.password + pepper, saltRounds);
             user.password = hashPassword;
-            const token = sign({ user: user }, String(process.env.TOKEN_SECRET), { expiresIn: 60 * 60 });
+            const token = sign({ user: user }, String(process.env.TOKEN_SECRET), { expiresIn: '1h' });
             const values = [user.firstName, user.email, user.lastName, user.password];
             const res = await conn.query(sql, values);
             conn.release();
@@ -54,7 +54,7 @@ export class UserStore {
                 if (!checkUser) {
                     throw new Error(`Invalid login credentials`);
                 }
-                const token = sign({ user: user }, String(process.env.TOKEN_SECRET), { expiresIn: 60 * 60 });
+                const token = sign({ user: user }, String(process.env.TOKEN_SECRET), { expiresIn: '1h' });
                 return [token, user]
             }
             return null;
