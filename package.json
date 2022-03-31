@@ -6,9 +6,10 @@
   "scripts": {
     "start": "nodemon server.ts",
     "prod": "NODE_ENV=prod node ./build/server.js",
+    "test": "NODE_ENV=test node ./build/server.js",
     "lint": "npx prettier --write . && npx eslint",
     "watch": "tsc-watch --esModuleInterop src/server.ts --outDir ./dist --onSuccess \"node ./dist/server.js\"",
-    "test": "NODE_ENV=test db-migrate --env test up && jasmine-ts && db-migrate db:drop test",
+    "test-db": "NODE_ENV=test db-migrate --env test up && jasmine-ts && db-migrate db:drop test",
     "tsc": "tsc"
   },
   "author": "Njoli Patrick",
