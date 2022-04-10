@@ -20,6 +20,19 @@ export class OrderLog {
             throw new Error(`could not connect fetch data from the db ${err}`);
         }
     };
+    async indexByID(ID: number): Promise<Order[]> {
+        try {
+            // @ts-ignore
+            const conn = await client.connect();
+            const sql = 'SELECT * FROM orders WHERE id = $1';
+            const values = [ID];
+            const res = await conn.query(sql, values);
+            conn.release();
+            return res.rows;
+        } catch (err) {
+            throw new Error(`could not connect fetch data from the db ${err}`);
+        }
+    };
     async create(order: Order): Promise<Order[]> {
         try {
             // @ts-ignore

@@ -13,7 +13,7 @@ const {
     NODE_ENV,
 } = process.env;
 
-let client;
+let client: Pool;
 
 if (NODE_ENV === 'prod') {
     console.log('::server in production mode');

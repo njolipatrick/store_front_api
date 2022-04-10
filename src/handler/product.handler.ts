@@ -1,6 +1,7 @@
 /* eslint-disable indent */
 import { Product, ProductStore } from '../models/product.model';
 import { Request, Response, Application } from 'express';
+import { authenticate, admin } from '../middleware/auth.middleware';
 
 const store = new ProductStore();
 
@@ -15,7 +16,18 @@ const index = async (req: Request, res: Response) => {
         return res.status(500).json({ error: error })
     }
 };
-
+const indexByID = async (req: Request, res: Response) => {
+    try {
+        const ID = Number(req.params.id);
+        const result = await store.indexByID(ID);
+        const response = {
+            status: 'success', statusCode: 200, response: result
+        }
+        return res.status(200).json(response);
+    } catch (error) {
+        return res.status(500).json({ error: error })
+    }
+};
 const create = async (req: Request, res: Response) => {
     try {
         const product: Product = {
@@ -64,9 +76,10 @@ const destroy = async (req: Request, res: Response) => {
 
 const productRoutes = (app: Application) => {
     app.get('/api/v1/product/', index);
-    app.post("/api/v1/product/", create);
-    app.put("/api/v1/product/:id", update);
-    app.delete("/api/v1/product/:id", destroy);
+    app.get('/api/v1/product/:id', indexByID);
+    app.post("/api/v1/product/", authenticate, admin, create);// protected
+    app.put("/api/v1/product/:id", authenticate, admin, update);// protected
+    app.delete("/api/v1/product/:id", authenticate, admin, destroy);// protected
 };
 
 export default productRoutes;

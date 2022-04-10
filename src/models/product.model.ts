@@ -20,6 +20,19 @@ export class ProductStore {
             throw new Error(`could not connect fetch data from the db ${err}`);
         }
     };
+    async indexByID(ID: number): Promise<Product[]> {
+        try {
+            // @ts-ignore
+            const conn = await client.connect();
+            const sql = 'SELECT * FROM products WHERE id = $1';
+            const values = [ID]
+            const res = await conn.query(sql, values);
+            conn.release();
+            return res.rows;
+        } catch (err) {
+            throw new Error(`could not connect fetch data from the db ${err}`);
+        }
+    };
     async create(product: Product): Promise<Product[]> {
         try {
             // @ts-ignore
