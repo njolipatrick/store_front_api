@@ -4,5 +4,4 @@ CREATE TABLE products (
     name VARCHAR(100),
     price INTEGER,
     category VARCHAR(100)
-    
 );
