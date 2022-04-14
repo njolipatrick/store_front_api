@@ -23,6 +23,30 @@ const show = async (req: Request, res: Response) => {
         return res.status(500).json({ error: error });
     }
 };
+const ActiveOrderbyUser = async (req: Request, res: Response) => {
+    try {
+        const token = req.body.token || req.query.token || req.headers.token;
+
+        const user_id = new UserStore().userinfo(token).id;
+
+        const result = await store.ActiveOrderbyUser({ user_id: Number(user_id) });
+        return res.status(200).json(result);
+    } catch (error) {
+        return res.status(500).json({ error: error });
+    }
+};
+const CompletedOrderbyUser = async (req: Request, res: Response) => {
+    try {
+        const token = req.body.token || req.query.token || req.headers.token;
+
+        const user_id = new UserStore().userinfo(token).id;
+
+        const result = await store.CompletedOrderbyUser({ user_id: Number(user_id) });
+        return res.status(200).json(result);
+    } catch (error) {
+        return res.status(500).json({ error: error });
+    }
+};
 const create = async (req: Request, res: Response) => {
     try {
         const token = req.body.token || req.query.token || req.headers.token;
@@ -61,9 +85,11 @@ const destroy = async (req: Request, res: Response) => {
 
 const orderRoutes = (app: Application) => {
     app.get("/api/v1/order/", authenticate, admin, index);
+    app.get("/api/v1/order/user/active", authenticate, admin, ActiveOrderbyUser);
+    app.get("/api/v1/order/user/complete", authenticate, admin, CompletedOrderbyUser);
     app.get("/api/v1/order/:id", authenticate, user, show);
     app.post("/api/v1/order/:product_id", authenticate, admin, create);
-    app.delete("/api/v1/order/:id", authenticate, user, destroy);
+    app.delete("/api/v1/order/:id", authenticate, admin, destroy);
 };
 
 export default orderRoutes;

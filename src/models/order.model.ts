@@ -1,5 +1,6 @@
 
 import client from "../../config/database";
+import { UserStore } from "./user.model";
 
 export type Order = {
     status: string;
@@ -24,6 +25,30 @@ export class OrderLog {
             const conn = await client.connect();
             const sql = "SELECT * FROM orders WHERE id = $1";
             const values = [ID];
+            const res = await conn.query(sql, values);
+            conn.release();
+            return res.rows;
+        } catch (err) {
+            throw new Error(`could not connect fetch data from the db ${err}`);
+        }
+    }
+    async ActiveOrderbyUser({ user_id }: { user_id: number; }): Promise<Order[]> {
+        try {
+            const conn = await client.connect();
+            const sql = "SELECT * FROM orders WHERE user_id = $1 AND status = 'active'";
+            const values = [user_id];
+            const res = await conn.query(sql, values);
+            conn.release();
+            return res.rows;
+        } catch (err) {
+            throw new Error(`could not connect fetch data from the db ${err}`);
+        }
+    }
+    async CompletedOrderbyUser({ user_id }: { user_id: number; }): Promise<Order[]> {
+        try {
+            const conn = await client.connect();
+            const sql = "SELECT * FROM orders WHERE user_id = $1 AND status = 'complete'";
+            const values = [user_id];
             const res = await conn.query(sql, values);
             conn.release();
             return res.rows;
