@@ -1,21 +1,23 @@
 /* eslint-disable indent */
 import { Order, OrderLog } from "../models/order.model";
 import { Request, Response, Application } from "express";
-import { authenticate, user } from "../middleware/auth.middleware";
+import { admin, authenticate, user } from "../middleware/auth.middleware";
+import { UserStore } from "../models/user.model";
 const store = new OrderLog();
 
 const index = async (req: Request, res: Response) => {
     try {
+
         const result = await store.index();
         return res.status(200).json(result);
     } catch (error) {
         return res.status(500).json({ error: error });
     }
 };
-const indexByID = async (req: Request, res: Response) => {
+const show = async (req: Request, res: Response) => {
     try {
         const ID = Number(req.params.id);
-        const result = await store.indexByID(ID);
+        const result = await store.show(ID);
         return res.status(200).json(result);
     } catch (error) {
         return res.status(500).json({ error: error });
@@ -23,28 +25,27 @@ const indexByID = async (req: Request, res: Response) => {
 };
 const create = async (req: Request, res: Response) => {
     try {
-        const order: Order = {
-            name: req.body.name,
-            price: req.body.price,
-            category: req.body.category,
-        };
-        const result = await store.create(order);
-        return res.status(200).json(result);
-    } catch (error) {
-        return res.status(500).json({ error: error });
-    }
-};
+        const token = req.body.token || req.query.token || req.headers.token;
 
-const update = async (req: Request, res: Response) => {
-    try {
+        const user_id = new UserStore().userinfo(token).id;
+
         const order: Order = {
-            name: req.body.name,
-            price: req.body.price,
-            category: req.body.category,
+            status: req.body.status,
+            quantity: req.body.quantity,
+            user_id: Number(user_id),
         };
-        const result = await store.update(order, Number(req.params.id));
-        return res.status(200).json(result);
+        const { product_id } = req.params;
+
+        const result = await store.create({ order, product_id: Number(product_id) });
+        const response = {
+            status: "success",
+            statusCode: 200,
+            response: result,
+        };
+        return res.status(200).json(response);
     } catch (error) {
+        console.log(error);
+
         return res.status(500).json({ error: error });
     }
 };
@@ -59,10 +60,9 @@ const destroy = async (req: Request, res: Response) => {
 };
 
 const orderRoutes = (app: Application) => {
-    app.get("/api/v1/order/", authenticate, user, index);
-    app.get("/api/v1/order/:id", authenticate, user, indexByID);
-    app.post("/api/v1/order/", authenticate, user, create);
-    app.put("/api/v1/order/:id", authenticate, user, update);
+    app.get("/api/v1/order/", authenticate, admin, index);
+    app.get("/api/v1/order/:id", authenticate, user, show);
+    app.post("/api/v1/order/:product_id", authenticate, admin, create);
     app.delete("/api/v1/order/:id", authenticate, user, destroy);
 };
 

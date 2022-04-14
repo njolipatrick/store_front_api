@@ -18,10 +18,10 @@ const index = async (req: Request, res: Response) => {
         return res.status(500).json({ error: error });
     }
 };
-const indexByID = async (req: Request, res: Response) => {
+const show = async (req: Request, res: Response) => {
     try {
         const ID = Number(req.params.id);
-        const result = await store.indexByID(ID);
+        const result = await store.show(ID);
         const response = {
             status: "success",
             statusCode: 200,
@@ -60,7 +60,6 @@ const register = async (req: Request, res: Response) => {
             return res.status(200).json(response);
         }
     } catch (error) {
-        console.log(error);
 
         return res.status(500).json({ message: error });
     }
@@ -81,34 +80,12 @@ const login = async (req: Request, res: Response) => {
     }
 };
 
-const update = async (req: Request, res: Response) => {
-    try {
-        const user: User = {
-            firstName: req.body.firstName,
-            email: req.body.email,
-            lastName: req.body.lastName,
-            role: req.body.role,
-            password: req.body.password,
-        };
-        const result = await store.update({ user, id: Number(req.params.id) });
-        const response = {
-            status: "success",
-            statusCode: 200,
-            response: result,
-        };
-        return res.status(200).json(response);
-    } catch (error) {
-        return res.status(500).json({ error: error });
-    }
-};
-
 const destroy = async (req: Request, res: Response) => {
     try {
         const result = await store.destroy({ id: Number(req.params.id) });
         if (result.length === 0) {
             return res.status(404).json({ message: "user not found" });
         } else {
-            console.log(result);
             const response = {
                 status: "success",
                 statusCode: 200,
@@ -124,9 +101,8 @@ const destroy = async (req: Request, res: Response) => {
 const userRoutes = (app: Application) => {
     app.post("/api/v1/user/login", login);
     app.post("/api/v1/user/register", register);
-    app.put("/api/v1/user/:id", authenticate, update); // protected
     app.get("/api/v1/user/", authenticate, admin, index); // protected
-    app.get("/api/v1/user/:id", authenticate, admin, indexByID); // protected
+    app.get("/api/v1/user/:id", authenticate, admin, show); // protected
     app.delete("/api/v1/user/:id", authenticate, admin, destroy); // protected
 };
 

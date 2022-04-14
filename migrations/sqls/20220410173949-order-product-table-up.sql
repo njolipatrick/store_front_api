@@ -4,6 +4,6 @@ CREATE TABLE order_product (
   quantity INTEGER NOT NULL,
   order_id integer REFERENCES orders (id) ON DELETE CASCADE,
   product_id integer REFERENCES products (id) ON DELETE CASCADE,
-  created_at timestamp without time zone NOT NULL,
-  updated_at timestamp without time zone NOT NULL
+  created_at timestamp default current_timestamp,
+  updated_at timestamp default current_timestamp
 );
