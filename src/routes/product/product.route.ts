@@ -1,5 +1,5 @@
-import { Router } from 'express';
-import products from '../../handler/product.handler';
+import { Router } from "express";
+import products from "../../handler/product.handler";
 
 const product = Router();
 
