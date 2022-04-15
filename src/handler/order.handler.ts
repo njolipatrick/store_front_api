@@ -80,6 +80,3 @@ const destroy = async (req: Request, res: Response) => {
 };
 
 export default { index, show, create, ActiveOrderbyUser, CompletedOrderbyUser, destroy };
-
-
-// select quantity from order_product where product;

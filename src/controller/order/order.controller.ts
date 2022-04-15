@@ -3,16 +3,16 @@ import { adminRole, userRole, authenticate } from "../../middleware/auth.middlew
 import orderRoutes from "../../handler/order.handler";
 const order = Router();
 
-order.get("/", orderRoutes.index);// protected
+order.get("/", authenticate, userRole, orderRoutes.index);// protected
 
-order.get("/user/active", orderRoutes.ActiveOrderbyUser);// protected
+order.get("/user/active", authenticate, adminRole, orderRoutes.ActiveOrderbyUser);// protected
 
-order.get("/user/complete", orderRoutes.CompletedOrderbyUser);// protected
+order.get("/user/complete", authenticate, adminRole, orderRoutes.CompletedOrderbyUser);// protected
 
-order.get("/:id", orderRoutes.show);// protected
+order.get("/:id", authenticate, adminRole, orderRoutes.show);// protected
 
-order.post("/:product_id", orderRoutes.create);// protected
+order.post("/:product_id", authenticate, adminRole, orderRoutes.create);// protected
 
-order.delete("/:id", orderRoutes.destroy);// protected
+order.delete("/:id", authenticate, adminRole, orderRoutes.destroy);// protected
 
 export default order;

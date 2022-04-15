@@ -5,9 +5,9 @@ import { adminRole, userRole, authenticate } from "../../middleware/auth.middlew
 const user = Router();
 
 user.post('/register', users.register);
-user.get('/', users.index);// protected
-user.get('/:id', users.show);// protected
-user.post('/login', users.login);// protected
-user.delete('/:id', users.destroy);// protected
+user.post('/login', users.login)
+user.get('/', authenticate, adminRole, users.index);// protected
+user.get('/:id', authenticate, adminRole, users.show);// protected
+user.delete('/:id', authenticate, adminRole, users.destroy);// protected
 
 export default user;

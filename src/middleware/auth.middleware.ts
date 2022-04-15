@@ -12,10 +12,9 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
             message: "A token is required for authentication",
         });
     }
-    console.log(token);
-    try {
 
-        verify(token, SECRET);
+    try {
+        verify(String(token), String(process.env.TOKEN_SECRET));
 
         next();
     } catch (error) {
@@ -26,13 +25,10 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
 export const adminRole = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.body.token || req.query.token || req.headers.token;
     const role = await check.getRole(String(token));
-    //@ts-ignore
-    console.log(role);
 
     if (role === "admin" || "user") {
         next();
     } else {
-
         return res
             .status(401)
             .json({ message: "action cannot be performed on this route" + role });

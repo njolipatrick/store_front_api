@@ -43,7 +43,7 @@ const register = async (req: Request, res: Response) => {
             password: req.body.password,
         };
 
-        const userAlreadyExist = await store.checker(user.email);
+        const userAlreadyExist = await store.checker({ email: user.email });
         if (userAlreadyExist) {
             return res
                 .status(409)
@@ -68,7 +68,7 @@ const login = async (req: Request, res: Response) => {
     const email = req.body.email;
     const password = req.body.password;
     try {
-        const foundUser = await store.checker(email);
+        const foundUser = await store.checker({ email });
         if (foundUser) {
             const result = await store.authenticate({ email, password });
             return res.status(200).json(result);
