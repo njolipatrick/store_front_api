@@ -1,7 +1,6 @@
 /* eslint-disable indent */
 import { User, UserStore } from "../models/user.model";
-import { Request, Response, Application } from "express";
-import { authenticate, admin } from "../middleware/auth.middleware";
+import { Request, Response } from "express";
 
 const store = new UserStore();
 
@@ -22,6 +21,7 @@ const show = async (req: Request, res: Response) => {
     try {
         const ID = Number(req.params.id);
         const result = await store.show(ID);
+        if (result.length === 0) return res.status(404).json({ message: "user not found" });
         const response = {
             status: "success",
             statusCode: 200,
@@ -98,12 +98,5 @@ const destroy = async (req: Request, res: Response) => {
     }
 };
 
-const userRoutes = (app: Application) => {
-    app.post("/api/v1/user/login", login);
-    app.post("/api/v1/user/register", register);
-    app.get("/api/v1/user/", authenticate, admin, index); // protected
-    app.get("/api/v1/user/:id", authenticate, admin, show); // protected
-    app.delete("/api/v1/user/:id", authenticate, admin, destroy); // protected
-};
 
-export default userRoutes;
+export default { index, show, register, login, destroy };

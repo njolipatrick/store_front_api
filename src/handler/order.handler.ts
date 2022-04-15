@@ -1,13 +1,11 @@
 /* eslint-disable indent */
 import { Order, OrderLog } from "../models/order.model";
-import { Request, Response, Application } from "express";
-import { admin, authenticate, user } from "../middleware/auth.middleware";
+import { Request, Response } from "express";
 import { UserStore } from "../models/user.model";
 const store = new OrderLog();
 
 const index = async (req: Request, res: Response) => {
     try {
-
         const result = await store.index();
         return res.status(200).json(result);
     } catch (error) {
@@ -68,8 +66,6 @@ const create = async (req: Request, res: Response) => {
         };
         return res.status(200).json(response);
     } catch (error) {
-        console.log(error);
-
         return res.status(500).json({ error: error });
     }
 };
@@ -83,13 +79,7 @@ const destroy = async (req: Request, res: Response) => {
     }
 };
 
-const orderRoutes = (app: Application) => {
-    app.get("/api/v1/order/", authenticate, admin, index);
-    app.get("/api/v1/order/user/active", authenticate, admin, ActiveOrderbyUser);
-    app.get("/api/v1/order/user/complete", authenticate, admin, CompletedOrderbyUser);
-    app.get("/api/v1/order/:id", authenticate, user, show);
-    app.post("/api/v1/order/:product_id", authenticate, admin, create);
-    app.delete("/api/v1/order/:id", authenticate, admin, destroy);
-};
+export default { index, show, create, ActiveOrderbyUser, CompletedOrderbyUser, destroy };
 
-export default orderRoutes;
+
+// select quantity from order_product where product;

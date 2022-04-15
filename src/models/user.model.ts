@@ -60,12 +60,12 @@ export class UserStore {
                 user.role,
             ];
             const res = await conn.query(sql, values);
-            const token = sign({ user: res.rows }, String(process.env.TOKEN_SECRET), {
+            const token = sign({ user: res.rows[0] }, String(process.env.TOKEN_SECRET), {
                 expiresIn: "7d",
             });
             conn.release();
             // @ts-ignore
-            return [token, res.rows];
+            return [token, res.rows[0]];
         } catch (err) {
             throw new Error(`unable to register user ${err}`);
         }
