@@ -71,7 +71,12 @@ const login = async (req: Request, res: Response) => {
         const foundUser = await store.checker({ email });
         if (foundUser) {
             const result = await store.authenticate({ email, password });
-            return res.status(200).json(result);
+            const response = {
+                status: "success",
+                statusCode: 200,
+                response: result,
+            };
+            return res.status(200).json(response);
         } else {
             return res.status(404).json({ message: `user with ${email} not found` });
         }

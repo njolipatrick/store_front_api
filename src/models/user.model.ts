@@ -66,7 +66,7 @@ export class UserStore {
             });
             conn.release();
             // @ts-ignore
-            return [token, res.rows];
+            return [{ token: token }, res.rows];
         } catch (err) {
             throw new Error(`unable to register user ${err}`);
         }
@@ -98,7 +98,7 @@ export class UserStore {
                 });
 
                 //@ts-ignore
-                return [token, user];
+                return [{ token: token }, user];
             }
             return null;
         } catch (error) {
@@ -141,7 +141,7 @@ export class UserStore {
             const sql = "SELECT * FROM users WHERE email = $1;";
             const values = [email];
             const res = await conn.query(sql, values);
-            
+
             conn.release();
 
             return res.rows[0].role;
@@ -151,7 +151,7 @@ export class UserStore {
     }
     userinfo(TOKEN: string): User {
         const user = verify(TOKEN, SECRET) as unknown as User;
-        
+
         //@ts-ignore
         return user.user;
     }
