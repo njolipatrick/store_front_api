@@ -1,7 +1,7 @@
 import request from 'supertest';
 import app from '../../../app';
 
-describe(':: POST ::>Test Register User', () => {
+describe('::::>Test User', () => {
     let originalTimeout: number;
 
     beforeAll(() => {
@@ -33,26 +33,12 @@ describe(':: POST ::> Test User Login', () => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
     });
     it(' Request /api/v1/user/login should return status 200', async () => {
-        const result = await request(app)
+        const { body } = await request(app)
             .post('/api/v1/user/login')
             .send({ email: "thil@gmai.com", password: 'password' });
-        expect(result.body.statusCode).toBe(200);
-        expect(result.body.response).toBeInstanceOf(Array);
-        expect(result.body.response[0].token).toBeInstanceOf(String);
-    });
-})
-
-
-describe(':: GET ::> Test Get All Users', () => {
-    let originalTimeout: number;
-
-    beforeAll(() => {
-        originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
-    });
-
-    afterAll(() => {
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
+        expect(body.statusCode).toBe(200);
+        expect(body.response).toBeInstanceOf(Array);
+        expect(body.response[0].token).toBeInstanceOf(String);
     });
     it('Request /api/v1/user/ should return status 200', async () => {
         const register = await request(app)
@@ -85,50 +71,31 @@ describe(':: GET ::> Test Get All Users', () => {
             .post('/api/v1/user/register')
             .send({ firstName: "JOB", lastName: "ROW", email: "thl@gmai.com", password: 'password', role: 'admin' });
         const token = register.body.response[0].token;
-        const result = await request(app)
+        const { body } = await request(app)
             .get('/api/v1/user/')
             .send({ "token": token });
-        expect(result.body.statusCode).toBe(200);
-        expect(result.body.response).toBeInstanceOf(Array);
-        expect(result.body.response.length).toBeGreaterThan(0);
+        expect(body.statusCode).toBe(200);
+        expect(body.response).toBeInstanceOf(Array);
+        expect(body.response.length).toBeGreaterThan(0);
 
     });
-});
-
-
-
-describe(':: DELETE ::> Test User Destroy', () => {
-    let originalTimeout: number;
-
-    beforeAll(() => {
-        originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
-    });
-
-    afterAll(() => {
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
-    });
-    it(' Request /api/v1/user/ should return status 200', async () => {
+    it(' Request /api/v1/user/ should return  deleted user ', async () => {
         const login = await request(app)
             .post('/api/v1/user/login')
             .send({ email: "thil@gmai.com", password: 'password' });
         const token = login.body.response[0].token;
         const delete_user_id: number = login.body.response[1].id;
-        const result = await request(app)
+        const { body } = await request(app)
             .get(`/api/v1/user/${delete_user_id}`)
             .send({ "token": token });
-        expect(result.body.statusCode).toBe(200);
-        expect(result.body.response).toBeInstanceOf(Array);
-        expect(result.body.response.length).toBeGreaterThan(0);
+        expect(body.statusCode).toBe(200);
+        expect(body.response).toBeInstanceOf(Array);
+        expect(body.response.length).toBeGreaterThan(0);
 
-    });
-})
-
-
-
-describe('Not found routes', () => {
+    })
     it('Request * should return status 404', async () => {
         const result = await request(app).get('/');
         expect(result.status).toBe(404);
     });
-});
+})
+
