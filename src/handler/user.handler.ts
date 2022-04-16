@@ -1,7 +1,6 @@
 /* eslint-disable indent */
 import { User, UserStore } from "../models/user.model";
-import { Request, Response, Application } from "express";
-import { authenticate, admin } from "../middleware/auth.middleware";
+import { Request, Response } from "express";
 
 const store = new UserStore();
 
@@ -22,6 +21,7 @@ const show = async (req: Request, res: Response) => {
     try {
         const ID = Number(req.params.id);
         const result = await store.show(ID);
+        if (result.length === 0) return res.status(404).json({ message: "user not found" });
         const response = {
             status: "success",
             statusCode: 200,
@@ -43,7 +43,7 @@ const register = async (req: Request, res: Response) => {
             password: req.body.password,
         };
 
-        const userAlreadyExist = await store.checker(user.email);
+        const userAlreadyExist = await store.checker({ email: user.email });
         if (userAlreadyExist) {
             return res
                 .status(409)
@@ -54,10 +54,10 @@ const register = async (req: Request, res: Response) => {
             const result = await store.register({ user });
             const response = {
                 status: "success",
-                statusCode: 200,
+                statusCode: 201,
                 response: result,
             };
-            return res.status(200).json(response);
+            return res.status(201).json(response);
         }
     } catch (error) {
 
@@ -68,10 +68,15 @@ const login = async (req: Request, res: Response) => {
     const email = req.body.email;
     const password = req.body.password;
     try {
-        const foundUser = await store.checker(email);
+        const foundUser = await store.checker({ email });
         if (foundUser) {
             const result = await store.authenticate({ email, password });
-            return res.status(200).json(result);
+            const response = {
+                status: "success",
+                statusCode: 200,
+                response: result,
+            };
+            return res.status(200).json(response);
         } else {
             return res.status(404).json({ message: `user with ${email} not found` });
         }
@@ -98,12 +103,5 @@ const destroy = async (req: Request, res: Response) => {
     }
 };
 
-const userRoutes = (app: Application) => {
-    app.post("/api/v1/user/login", login);
-    app.post("/api/v1/user/register", register);
-    app.get("/api/v1/user/", authenticate, admin, index); // protected
-    app.get("/api/v1/user/:id", authenticate, admin, show); // protected
-    app.delete("/api/v1/user/:id", authenticate, admin, destroy); // protected
-};
 
-export default userRoutes;
+export default { index, show, register, login, destroy };

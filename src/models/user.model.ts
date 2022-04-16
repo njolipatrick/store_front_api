@@ -60,12 +60,13 @@ export class UserStore {
                 user.role,
             ];
             const res = await conn.query(sql, values);
-            const token = sign({ user: res.rows }, String(process.env.TOKEN_SECRET), {
+
+            const token = sign({ user: res.rows[0] }, String(process.env.TOKEN_SECRET), {
                 expiresIn: "7d",
             });
             conn.release();
             // @ts-ignore
-            return [token, res.rows];
+            return [{ token: token }, res.rows];
         } catch (err) {
             throw new Error(`unable to register user ${err}`);
         }
@@ -82,20 +83,22 @@ export class UserStore {
             const sql = "SELECT * FROM users WHERE email =$1";
             const result = await conn.query(sql, [email]);
             if (result.rows.length) {
-                const user = result.rows;
+                const user = result.rows[0];
                 const checkUser = await bcrypt.compare(
                     password + pepper,
-                    user[0].password
+                    user.password
                 );
 
                 if (!checkUser) {
                     throw new Error(`Invalid login credentials`);
                 }
+
                 const token = sign({ user: user }, String(process.env.TOKEN_SECRET), {
                     expiresIn: "7d",
                 });
+
                 //@ts-ignore
-                return [token, user];
+                return [{ token: token }, user];
             }
             return null;
         } catch (error) {
@@ -116,12 +119,13 @@ export class UserStore {
             throw new Error(`could not connect fetch data from the db ${err}`);
         }
     }
-    async checker(email: string): Promise<Boolean> {
+    async checker({ email }: { email: string; }): Promise<Boolean> {
         try {
             const conn = await client.connect();
-            const sql = "SELECT email FROM users WHERE email = $1;";
+            const sql = "SELECT * FROM users WHERE email = $1";
             const values = [email];
             const res = await conn.query(sql, values);
+
             conn.release();
             return res.rows[0] ? true : false;
         } catch (err) {
@@ -147,7 +151,8 @@ export class UserStore {
     }
     userinfo(TOKEN: string): User {
         const user = verify(TOKEN, SECRET) as unknown as User;
+
         //@ts-ignore
-        return user.user[0];
+        return user.user;
     }
 }
