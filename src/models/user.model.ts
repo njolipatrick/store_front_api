@@ -60,7 +60,6 @@ export class UserStore {
                 user.role,
             ];
             const res = await conn.query(sql, values);
-            console.log(res.rows[0]);
 
             const token = sign({ user: res.rows[0] }, String(process.env.TOKEN_SECRET), {
                 expiresIn: "7d",
@@ -93,12 +92,10 @@ export class UserStore {
                 if (!checkUser) {
                     throw new Error(`Invalid login credentials`);
                 }
-                // console.log(user);
 
                 const token = sign({ user: user }, String(process.env.TOKEN_SECRET), {
                     expiresIn: "7d",
                 });
-                console.log(String(process.env.TOKEN_SECRET), token, verify(token, String(process.env.TOKEN_SECRET)));
 
                 //@ts-ignore
                 return [token, user];

@@ -8,6 +8,7 @@ const {
   POSTGRES_DB,
   POSTGRES_DEV_DB,
   POSTGRES_TEST_DB,
+  POSTGRES_TEST_DB_INT,
   POSTGRES_USER,
   POSTGRES_PASSWORD,
   NODE_ENV,
@@ -31,7 +32,16 @@ if (NODE_ENV === "prod") {
     user: POSTGRES_USER,
     password: POSTGRES_PASSWORD,
   });
-} else {
+} else if (NODE_ENV === "test_int") {
+  console.log("::server in intergration testing mode");
+  client = new Pool({
+    host: POSTGRES_HOST,
+    database: POSTGRES_TEST_DB_INT,
+    user: POSTGRES_USER,
+    password: POSTGRES_PASSWORD,
+  });
+}
+else {
   console.log("::server in developer mode");
   client = new Pool({
     host: POSTGRES_HOST,

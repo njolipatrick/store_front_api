@@ -54,10 +54,10 @@ const register = async (req: Request, res: Response) => {
             const result = await store.register({ user });
             const response = {
                 status: "success",
-                statusCode: 200,
+                statusCode: 201,
                 response: result,
             };
-            return res.status(200).json(response);
+            return res.status(201).json(response);
         }
     } catch (error) {
 

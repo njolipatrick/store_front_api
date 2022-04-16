@@ -6,11 +6,11 @@
   "scripts": {
     "start": "nodemon server.ts",
     "prod": "NODE_ENV=prod node ./build/server.js",
-    "test": "npm run build && NODE_ENV=dev npm run jasmine",
+    "test-up": "npm run build && db-migrate --env test up && npm run jasmine",
     "lint": "npx prettier --write . && npx eslint",
-    "test-db": "NODE_ENV=test db-migrate --env test up && jasmine-ts && db-migrate db:drop test",
+    "test-down": "db-migrate --env test down --count 6",
     "build": "npx tsc",
-    "jasmine": "jasmine"
+    "jasmine": "NODE_ENV=test_int jasmine"
   },
   "author": "Njoli Patrick",
   "license": "ISC",
