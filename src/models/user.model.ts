@@ -5,6 +5,7 @@ import { sign, verify } from "jsonwebtoken";
 const saltRounds = Number(process.env.SALT_ROUNDS);
 const pepper = process.env.BCRYPT_PASSWORD;
 const SECRET = String(process.env.TOKEN_SECRET);
+import { userinfo } from "../utile/userinfo.utile";
 
 export type User = {
     id?: number;
@@ -134,7 +135,7 @@ export class UserStore {
     }
     async getRole(TOKEN: string): Promise<string> {
 
-        const email = this.userinfo(TOKEN).email;
+        const email = userinfo(TOKEN).email;
 
         try {
             const conn = await client.connect();
@@ -148,11 +149,5 @@ export class UserStore {
         } catch (err) {
             throw new Error(`could not connect fetch data from the db ${err}`);
         }
-    }
-    userinfo(TOKEN: string): User {
-        const user = verify(TOKEN, SECRET) as unknown as User;
-
-        //@ts-ignore
-        return user.user;
     }
 }

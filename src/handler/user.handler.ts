@@ -1,4 +1,3 @@
-/* eslint-disable indent */
 import { User, UserStore } from "../models/user.model";
 import { Request, Response } from "express";
 
