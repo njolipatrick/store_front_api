@@ -2,6 +2,7 @@
 import { Order, OrderLog } from "../models/order.model";
 import { Request, Response } from "express";
 import { UserStore } from "../models/user.model";
+import { userinfo } from "../utile/userinfo.utile";
 const store = new OrderLog();
 
 const index = async (req: Request, res: Response) => {
@@ -35,7 +36,7 @@ const ActiveOrderbyUser = async (req: Request, res: Response) => {
     try {
         const token = req.body.token || req.query.token || req.headers.token;
 
-        const user_id = new UserStore().userinfo(token).id;
+        const user_id = userinfo(token).id;
 
         const result = await store.ActiveOrderbyUser({ user_id: Number(user_id) });
         const response = {
@@ -52,7 +53,7 @@ const CompletedOrderbyUser = async (req: Request, res: Response) => {
     try {
         const token = req.body.token || req.query.token || req.headers.token;
 
-        const user_id = new UserStore().userinfo(token).id;
+        const user_id = userinfo(token).id;
 
         const result = await store.CompletedOrderbyUser({ user_id: Number(user_id) });
         const response = {
@@ -69,7 +70,7 @@ const create = async (req: Request, res: Response) => {
     try {
         const token = req.body.token || req.query.token || req.headers.token;
 
-        const user_id = new UserStore().userinfo(token).id;
+        const user_id = userinfo(token).id;
 
         const order: Order = {
             status: req.body.status,
