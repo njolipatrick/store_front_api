@@ -80,7 +80,7 @@ export class OrderLog {
                 quantity: order.quantity,
                 status: order.status
             }
-            return result;
+            return [result];
         } catch (err) {
             throw new Error(`could not connect fetch data from the db ${err}`);
         }

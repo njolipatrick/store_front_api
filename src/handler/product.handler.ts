@@ -78,12 +78,4 @@ const destroy = async (req: Request, res: Response) => {
     return res.status(500).json({ error: error });
   }
 };
-
-// const productRoutes = (app: Application) => {
-//   app.get("/api/v1/product/", index);
-//   app.get("/api/v1/product/:id", show);
-//   app.post("/api/v1/product/", authenticate, adminRole, create); // protected
-//   app.delete("/api/v1/product/:id", authenticate, adminRole, destroy); // protected
-// };
-
 export default {index, show, getProductByCategory, create, destroy};
