@@ -3,7 +3,7 @@ import { adminRole, userRole, authenticate } from "../../middleware/auth.middlew
 import orderRoutes from "../../handler/order.handler";
 const order = Router();
 
-order.get("/", authenticate, userRole, orderRoutes.index);// protected
+order.get("/", authenticate, adminRole, orderRoutes.index);// protected
 
 order.get("/user/active", authenticate, adminRole, orderRoutes.ActiveOrderbyUser);// protected
 

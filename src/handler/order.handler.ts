@@ -7,7 +7,12 @@ const store = new OrderLog();
 const index = async (req: Request, res: Response) => {
     try {
         const result = await store.index();
-        return res.status(200).json(result);
+        const response = {
+            status: "success",
+            statusCode: 200,
+            response: result,
+        };
+        return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json({ error: error });
     }
@@ -16,7 +21,12 @@ const show = async (req: Request, res: Response) => {
     try {
         const ID = Number(req.params.id);
         const result = await store.show(ID);
-        return res.status(200).json(result);
+        const response = {
+            status: "success",
+            statusCode: 200,
+            response: result,
+        };
+        return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json({ error: error });
     }
@@ -28,7 +38,12 @@ const ActiveOrderbyUser = async (req: Request, res: Response) => {
         const user_id = new UserStore().userinfo(token).id;
 
         const result = await store.ActiveOrderbyUser({ user_id: Number(user_id) });
-        return res.status(200).json(result);
+        const response = {
+            status: "success",
+            statusCode: 200,
+            response: result,
+        };
+        return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json({ error: error });
     }
@@ -40,7 +55,12 @@ const CompletedOrderbyUser = async (req: Request, res: Response) => {
         const user_id = new UserStore().userinfo(token).id;
 
         const result = await store.CompletedOrderbyUser({ user_id: Number(user_id) });
-        return res.status(200).json(result);
+        const response = {
+            status: "success",
+            statusCode: 200,
+            response: result,
+        };
+        return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json({ error: error });
     }
@@ -73,7 +93,12 @@ const create = async (req: Request, res: Response) => {
 const destroy = async (req: Request, res: Response) => {
     try {
         const result = await store.destroy(Number(req.params.id));
-        return res.status(200).json(result);
+        const response = {
+            status: "success",
+            statusCode: 200,
+            response: result,
+        };
+        return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json({ error: error });
     }
