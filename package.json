@@ -9,6 +9,7 @@
     "test-up": "npm run build && db-migrate --env test up && npm run jasmine",
     "lint": "npx prettier --write . && npx eslint",
     "test-down": "db-migrate --env test down --count 6",
+    "test": "npm run jasmine",
     "build": "npx tsc",
     "jasmine": "NODE_ENV=test_int jasmine"
   },
